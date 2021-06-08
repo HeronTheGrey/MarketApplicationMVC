@@ -62,8 +62,8 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ContactInformationDetail")
-                        .HasColumnType("int");
+                    b.Property<string>("ContactInformationDetail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContactTypeId")
                         .HasColumnType("int");
@@ -87,12 +87,112 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ContactTypes");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.ForumPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ForumThreadId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ForumThreadId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ForumPosts");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.ForumThread", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ForumThreads");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.Offer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OfferCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Picture")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfferCategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.OfferCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OfferCategories");
                 });
 
             modelBuilder.Entity("MarketApplicationMVC.Domain.Model.Type", b =>
@@ -117,6 +217,9 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Login")
                         .HasColumnType("nvarchar(max)");
 
@@ -126,7 +229,7 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int?>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -360,13 +463,44 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.ForumPost", b =>
+                {
+                    b.HasOne("MarketApplicationMVC.Domain.Model.ForumThread", "ForumThread")
+                        .WithMany("ForumPosts")
+                        .HasForeignKey("ForumThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
+                        .WithMany("ForumPosts")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.ForumThread", b =>
+                {
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
+                        .WithMany("ForumThreads")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("MarketApplicationMVC.Domain.Model.Offer", b =>
+                {
+                    b.HasOne("MarketApplicationMVC.Domain.Model.OfferCategory", "OfferCategory")
+                        .WithMany("Offers")
+                        .HasForeignKey("OfferCategoryId");
+
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
+                        .WithMany("Offers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MarketApplicationMVC.Domain.Model.User", b =>
                 {
                     b.HasOne("MarketApplicationMVC.Domain.Model.Type", "Type")
                         .WithMany("Users")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TypeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

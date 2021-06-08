@@ -1,0 +1,35 @@
+﻿@model MarketApplicationMVC.Application.ViewModel.Forum.NewPostVm
+
+@{
+    ViewData["Title"] = "Add post";
+}
+
+<h1>AddThreadPost</h1>
+
+<h4>NewPostVm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddThreadPost" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" class="form-control" />
+            <div class="form-group">
+                <label asp-for="PostContent" class="control-label"></label>
+                <input asp-for="PostContent" class="form-control" />
+                <span asp-validation-for="PostContent" class="text-danger"></span>
+            </div>
+                <input type="hidden" asp-for="ThreadId" class="form-control" value="@Model.ThreadId" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @Html.ActionLink("Back to thread", "ViewThreadPosts", new { id = Model.ThreadId })
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

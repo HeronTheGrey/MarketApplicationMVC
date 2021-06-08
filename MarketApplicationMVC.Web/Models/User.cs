@@ -19,6 +19,7 @@ namespace MarketApplicationMVC.Web.Models
             Id = id;
             Name = name;
             UserType = userType;
+            
         }
 
         [DisplayName("Identificator")]
@@ -26,5 +27,7 @@ namespace MarketApplicationMVC.Web.Models
         public string Name { get; set; }
         [DisplayName("Type of user")]
         public string UserType { get; set; }
+        
+    
     }
 }

@@ -15,6 +15,13 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
         public DbSet<Domain.Model.Type> Types { get; set; }
         public DbSet<User> Users { get; set; }
 
+
+        public DbSet<ForumPost> ForumPosts { get; set; }
+        public DbSet<ForumThread> ForumThreads { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<OfferCategory> OfferCategories { get; set; }
+
+
         public Context(DbContextOptions options) : base(options)
         {
 
@@ -24,9 +31,60 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<User>()
+
+            //User relations
+
+            builder.Entity<Domain.Model.Type>() //type - user
+                .HasMany(p => p.Users)
+                .WithOne(b => b.Type)
+                .IsRequired(false);
+
+            builder.Entity<User>() //address - user
                 .HasOne(a => a.Address).WithOne(b => b.User)
                 .HasForeignKey<Address>(e => e.UserRef);
+
+            builder.Entity<ContactInformation>() //contact information - user
+                .HasOne(p => p.User)
+                .WithMany(b => b.ContactInformations);
+
+            //Forum relations
+
+            builder.Entity<ForumThread>() //thread - user
+                .HasOne(p => p.User)
+                .WithMany(b => b.ForumThreads)
+                .IsRequired(false);
+
+
+            builder.Entity<ForumPost>() //post - user
+                .HasOne(p => p.User)
+                .WithMany(b => b.ForumPosts)
+                .IsRequired(false);
+
+            builder.Entity<ForumPost>() //post - thread
+                .HasOne(p => p.ForumThread)
+                .WithMany(b => b.ForumPosts);
+
+            //Market relations
+
+            builder.Entity<Offer>() //offer price-property
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,4)");
+
+            builder.Entity<Offer>() //offer - user
+                .HasOne(p => p.User)
+                .WithMany(b => b.Offers);
+
+            builder.Entity<Offer>() //offer - offer category
+                .HasOne(p => p.OfferCategory)
+                .WithMany(b => b.Offers)
+                .IsRequired(false);
+
+
+            
+
+            
+
+            
 
         }
     }

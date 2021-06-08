@@ -12,10 +12,14 @@ namespace MarketApplicationMVC.Domain.Model
         public string Name { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public bool IsActive { get; set; }
         public virtual ICollection<ContactInformation> ContactInformations { get; set; }
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
         public virtual Type Type { get; set; }
         public virtual Address Address { get; set; }
+        public virtual ICollection<ForumPost> ForumPosts { get; set; }
+        public virtual ICollection<ForumThread> ForumThreads { get; set; }
+        public virtual ICollection<Offer> Offers { get; set; }
 
     }
 }
