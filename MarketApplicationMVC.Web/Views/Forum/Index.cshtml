@@ -9,7 +9,7 @@
 <p>
     <a asp-action="AddForumThread">Create New</a>
 </p>
-<form asp-action="Index" asp-controller="Forum" method="post">
+<form asp-action="Index" asp-controller="Forum" name="formularz" method="post">
     <div class="row">
         <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase"/>
         <input type="submit" value="Wyszukaj"/>
@@ -44,8 +44,8 @@
                             @Html.DisplayFor(modelItem => item.AuthorName)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                            <!--@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |-->
+                           <!--@Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
                             @Html.ActionLink("Posts", "ViewThreadPosts", new { id = item.Id }) |
                             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                         </td>
@@ -84,7 +84,7 @@
         function PageClick(index)
         {
             document.getElementById("currentPage").value = index;
-            document.forms[0].submit();
+            document.formularz.submit();
         }
 
     </script>

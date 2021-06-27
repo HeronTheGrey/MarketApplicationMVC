@@ -72,7 +72,8 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
 
             builder.Entity<Offer>() //offer - user
                 .HasOne(p => p.User)
-                .WithMany(b => b.Offers);
+                .WithMany(b => b.Offers)
+                .IsRequired(false);
 
             builder.Entity<Offer>() //offer - offer category
                 .HasOne(p => p.OfferCategory)

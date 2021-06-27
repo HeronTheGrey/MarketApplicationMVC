@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MarketApplicationMVC.Web.Controllers
 {
+    [Authorize]
     public class ForumController : Controller
     {
         private readonly IForumService _forumService;
@@ -43,12 +45,14 @@ namespace MarketApplicationMVC.Web.Controllers
         {
             return View(new NewThreadVm());
         }
+
         [HttpPost]
         public IActionResult AddForumThread(NewThreadVm model)
         {
             int id = _forumService.AddForumThread(model);
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public IActionResult ViewThreadPosts(int id, bool lastpage = false)
         {

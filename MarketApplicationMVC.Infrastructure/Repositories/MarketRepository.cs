@@ -1,5 +1,6 @@
 ﻿using MarketApplicationMVC.Domain.Interface;
 using MarketApplicationMVC.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,10 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
         }
         public int AddOffer(Offer offer)
         {
+            if(offer.UserId == 0)
+            {
+                offer.UserId = null;
+            }
             _context.Offers.Add(offer);
             _context.SaveChanges();
             return offer.Id;
@@ -45,7 +50,7 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
 
         public Offer GetOfferById(int id)
         {
-            var offer = _context.Offers.FirstOrDefault(i => i.Id == id);
+            var offer = _context.Offers.Include(p => p.OfferCategory).FirstOrDefault(i => i.Id == id);
             return offer;
         }
 

@@ -11,11 +11,11 @@ namespace MarketApplicationMVC.Domain.Model
         public string Name { get; set; }
         public byte[] Picture { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; } // rozwiązać problem z przecinkiem
         public bool IsActive { get; set; }
         public int OfferCategoryId { get; set; }
         public virtual OfferCategory OfferCategory { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public virtual User User { get; set; }
     }
 }

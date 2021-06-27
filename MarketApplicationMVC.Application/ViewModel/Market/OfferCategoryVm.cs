@@ -7,17 +7,15 @@ using System.Text;
 
 namespace MarketApplicationMVC.Application.ViewModel.Market
 {
-    public class OfferForListVm : IMapFrom<Offer>
+    public class OfferCategoryVm : IMapFrom<OfferCategory>
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int Price { get; set; } //rozwiązać problem z przecinkiem
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Offer, OfferForListVm>();
-
+            profile.CreateMap<OfferCategory, OfferCategoryVm>();
+            profile.CreateMap<OfferCategoryVm, OfferCategory>();
         }
     }
 }

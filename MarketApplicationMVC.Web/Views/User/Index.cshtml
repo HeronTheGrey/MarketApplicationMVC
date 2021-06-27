@@ -9,7 +9,7 @@
 <p>
     <a asp-action="AddUser">Create New</a>
 </p>
-<form asp-action="Index" asp-controller="User" method="post">
+<form asp-action="Index" asp-controller="User" name="formularz" method="post">
     <div class="row">
         <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase" />
         <input type="submit" value="Wyszukaj"/>
@@ -80,8 +80,9 @@
     <script type="text/javascript">
         function PageClick(index)
         {
+
             document.getElementById("pageNo").value = index;
-            document.forms[0].submit();
+            document.formularz.submit();
         }
     </script>
 }

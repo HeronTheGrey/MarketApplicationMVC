@@ -43,9 +43,33 @@ namespace MarketApplicationMVC.Web
             services.AddApplication();
             services.AddRazorPages();
 
-            
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
 
-            
+                options.SignIn.RequireConfirmedEmail = false;
+                options.User.RequireUniqueEmail = true;
+
+            });
+
+            /*services.AddAuthentication().AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
+            });*/
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanEditUser", policy =>
+                {
+                    policy.RequireClaim("EditUser");
+                    policy.RequireClaim("ShowClient");
+                    policy.RequireRole("Admin");
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

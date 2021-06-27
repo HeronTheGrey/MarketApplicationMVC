@@ -1,6 +1,7 @@
 ﻿using MarketApplicationMVC.Application.Interfaces;
 using MarketApplicationMVC.Application.Services;
 using MarketApplicationMVC.Application.ViewModel.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MarketApplicationMVC.Web.Controllers
 {
+    [AllowAnonymous]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -24,6 +26,7 @@ namespace MarketApplicationMVC.Web.Controllers
             var model = _userService.GetAllActiveUsersForList(5, 1, "");
             return View(model);
         }
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Index(int pageSize, int? pageNo, string searchPhrase)
         {

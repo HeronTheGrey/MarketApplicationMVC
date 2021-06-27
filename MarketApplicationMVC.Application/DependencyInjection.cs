@@ -25,6 +25,8 @@ namespace MarketApplicationMVC.Application
             services.AddTransient<IValidator<NewUserVm>, NewUserValidator>();
             services.AddTransient<IValidator<AddressEditVm>, NewAddressValidator>();
             services.AddTransient<IValidator<NewThreadVm>, NewThreadValidator>();
+            services.AddTransient<IValidator<NewOfferVm>, NewOfferValidator>();
+
             return services;
         }
     }
