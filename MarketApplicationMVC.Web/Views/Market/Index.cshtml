@@ -1,14 +1,20 @@
 ﻿@model MarketApplicationMVC.Application.ViewModel.Market.ListOfferForListVm
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="AddOffer">Create New</a>
+    </p>
+}
 
-<p>
-    <a asp-action="AddOffer">Create New</a>
-</p>
 <form asp-action="Index" asp-controller="Market" name="formularz" method="post">
     <div class="row">
         <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase" />
@@ -50,8 +56,12 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td>
-                            @Html.ActionLink("Details", "ViewOfferDetails", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "DeleteOffer", new { id = item.Id })
+                            @Html.ActionLink("Details", "ViewOfferDetails", new { id = item.Id })
+                            @if (item.UserId == UserManager.GetUserId(User))
+                            {
+                                @(" | ")
+                                @Html.ActionLink("Delete", "DeleteOffer", new { id = item.Id })
+                            }
                         </td>
                     </tr>
                 }
@@ -81,13 +91,13 @@
         <input type="hidden" name="pageSize" id="pageSize" value="5" />
     </div>
 </form>
-    @section Scripts
+@section Scripts
 {
-        <script type="text/javascript">
-            function PageClick(index) {
+    <script type="text/javascript">
+        function PageClick(index) {
 
-                document.getElementById("pageNo").value = index;
-                document.formularz.submit();
-            }
-        </script>
-    }
+            document.getElementById("pageNo").value = index;
+            document.formularz.submit();
+        }
+    </script>
+}

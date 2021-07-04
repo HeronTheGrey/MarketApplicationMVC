@@ -12,6 +12,7 @@ namespace MarketApplicationMVC.Application.ViewModel.Forum
         public int Id { get; set; }
         public string PostContent { get; set; }
         public int ThreadId { get; set; }
+        public string UserId { get; set; }
 
         public void Mapping(Profile profile)
         {

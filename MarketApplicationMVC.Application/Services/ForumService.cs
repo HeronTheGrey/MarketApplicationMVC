@@ -8,6 +8,8 @@ using System.Text;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 using MarketApplicationMVC.Domain.Model;
 
 namespace MarketApplicationMVC.Application.Services
@@ -16,11 +18,13 @@ namespace MarketApplicationMVC.Application.Services
     {
         private readonly IForumRepository _forumRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ForumService(IForumRepository forumRepository, IMapper mapper)
+        public ForumService(IForumRepository forumRepository, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             _forumRepository = forumRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
         public int AddForumThread(NewThreadVm newThread)
         {
@@ -33,8 +37,19 @@ namespace MarketApplicationMVC.Application.Services
         public int AddThreadPost(NewPostVm newPost)
         {
             var post = _mapper.Map<ForumPost>(newPost);
+
             var id = _forumRepository.AddForumPost(post);
             return id;
+        }
+
+        public void DeletePost(int id)
+        {
+            _forumRepository.DeleteForumPost(id);
+        }
+
+        public void DeleteThread(int id)
+        {
+            _forumRepository.DeactivateThread(id);
         }
 
         public int GetThreadPostsAmountByThreadId(int id)
@@ -44,13 +59,21 @@ namespace MarketApplicationMVC.Application.Services
             return amount;
         }
 
-        public ListForumThreadForListVm ViewAllActiveThreads(int pageSize, int pageNumber, string searchPhrase)
+        public async Task<ListForumThreadForListVm> ViewAllActiveThreads(int pageSize, int pageNumber, string searchPhrase)
         {
             var threads = _forumRepository.GetAllForumThreads()
                 .Where(p => p.IsActive == true)
                 .Where(p => p.Name.Contains(searchPhrase))
                 .ProjectTo<ForumThreadForListVm>(_mapper.ConfigurationProvider).ToList();
             var threadsToShow = threads.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            foreach(var thread in threadsToShow)
+            {
+                var user = await _userManager.FindByIdAsync(thread.UserId);
+                if (user != null)
+                {
+                    thread.AuthorName = user.UserName;
+                }
+            }
             var threadsList = new ListForumThreadForListVm
             {
                 PageSize = pageSize,

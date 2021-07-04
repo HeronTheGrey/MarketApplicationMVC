@@ -37,6 +37,7 @@ namespace MarketApplicationMVC.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<Context>();
             services.AddControllersWithViews().AddFluentValidation(fv => fv.DisableDataAnnotationsValidation = true);
             services.AddInfrastructure();

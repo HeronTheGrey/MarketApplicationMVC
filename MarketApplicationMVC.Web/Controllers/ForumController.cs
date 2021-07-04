@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MarketApplicationMVC.Web.Controllers
 {
@@ -15,18 +16,20 @@ namespace MarketApplicationMVC.Web.Controllers
     public class ForumController : Controller
     {
         private readonly IForumService _forumService;
-        public ForumController(IForumService forumService)
+        private readonly UserManager<IdentityUser> _userManager;
+        public ForumController(IForumService forumService, UserManager<IdentityUser> userManager)
         {
             _forumService = forumService;
+            _userManager = userManager;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _forumService.ViewAllActiveThreads(5, 1, "");
+            var model = await _forumService.ViewAllActiveThreads(5, 1, "");
             return View(model);
         }
         [HttpPost]
-        public IActionResult Index(int pageSize, int? currentPage, string searchPhrase)
+        public async Task<IActionResult> Index(int pageSize, int? currentPage, string searchPhrase)
         {
             if(searchPhrase is null)
             {
@@ -36,7 +39,7 @@ namespace MarketApplicationMVC.Web.Controllers
             {
                 currentPage = 1;
             }
-            var model = _forumService.ViewAllActiveThreads(pageSize, (int)currentPage, searchPhrase);
+            var model = await _forumService.ViewAllActiveThreads(pageSize, (int)currentPage, searchPhrase);
             return View(model);
         }
 
@@ -47,24 +50,28 @@ namespace MarketApplicationMVC.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddForumThread(NewThreadVm model)
+        public async Task<IActionResult> AddForumThread(NewThreadVm model)
         {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            model.UserId = userId;
             int id = _forumService.AddForumThread(model);
+            
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult ViewThreadPosts(int id, bool lastpage = false)
+        public IActionResult ViewThreadPosts(int id, bool lastpage = false, int currentPage = 1, int pageSize = 10)
         {
             if(lastpage)
             {
                 var threadPostAmount = _forumService.GetThreadPostsAmountByThreadId(id);
-                var model = _forumService.ViewThreadPosts(id, 10, (int)Math.Ceiling((double)threadPostAmount / 10));
+                var model = _forumService.ViewThreadPosts(id, pageSize, (int)Math.Ceiling((double)threadPostAmount / 10));
                 return View(model);
             }
             else 
             {
-                var model = _forumService.ViewThreadPosts(id, 10, 1);
+                var model = _forumService.ViewThreadPosts(id, pageSize, currentPage);
                 return View(model);
             }
             
@@ -85,10 +92,27 @@ namespace MarketApplicationMVC.Web.Controllers
             return View(newPost);
         }
         [HttpPost]
-        public IActionResult AddThreadPost(NewPostVm model)
+        public async Task<IActionResult> AddThreadPost(NewPostVm model)
         {
+            var user = await _userManager.GetUserAsync(User);
+            model.UserId = user.Id;
             _forumService.AddThreadPost(model);
             return RedirectToAction("ViewThreadPosts", new { id = model.ThreadId, lastpage = true });
         }
+
+        [HttpGet]
+        public IActionResult DeleteThreadPost(int id, int threadId, int pageSize, int currentPage)
+        {
+            _forumService.DeletePost(id);
+            return RedirectToAction("ViewThreadPosts", new { id = threadId, pageSize = pageSize, currentPage = currentPage});
+        }
+
+        [HttpGet]
+        public IActionResult DeleteThread(int id)
+        {
+            _forumService.DeleteThread(id);
+            return RedirectToAction("Index");
+        }
+
     }
 }

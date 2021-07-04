@@ -9,15 +9,18 @@ using MarketApplicationMVC.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
 
 namespace MarketApplicationMVC.Web.Controllers
 {
     public class MarketController : Controller
     {
         private readonly IMarketService _marketService;
-        public MarketController(IMarketService marketService)
+        private readonly UserManager<IdentityUser> _userManager;
+        public MarketController(IMarketService marketService, UserManager<IdentityUser> userManager)
         {
             _marketService = marketService;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -60,6 +63,9 @@ namespace MarketApplicationMVC.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOffer(NewOfferVm model)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var userId = currentUser.Id;
+            model.UserId = userId;
             int id = await _marketService.AddOffer(model);
             var types = _marketService.GetOfferTypes();
             List<SelectListItem> listItems = new List<SelectListItem>();
@@ -77,12 +83,41 @@ namespace MarketApplicationMVC.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewOfferDetails(int id)
+        public async Task<IActionResult> ViewOfferDetails(int id)
         {
             ViewBag.Image = null;
-            var model = _marketService.ViewOfferDetails(id);
+            var model = await _marketService.ViewOfferDetails(id);
             ViewBag.Image = ViewImage(model.Picture);
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditOffer(int id)
+        {
+            var model = _marketService.GetOfferForEdit(id);
+
+            var types = _marketService.GetOfferTypes();
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            foreach (var type in types)
+            {
+                listItems.Add(new SelectListItem
+                {
+                    Text = type.Name,
+                    Value = type.Id.ToString()
+                });
+            }
+
+            ViewData["Categories"] = new SelectList(listItems, "Value", "Text", model.OfferCategoryId.ToString());
+
+                        
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditOffer(OfferForEditVm model)
+        {
+            await _marketService.UpdateOffer(model);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

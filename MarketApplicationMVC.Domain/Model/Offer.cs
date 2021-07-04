@@ -15,7 +15,6 @@ namespace MarketApplicationMVC.Domain.Model
         public bool IsActive { get; set; }
         public int OfferCategoryId { get; set; }
         public virtual OfferCategory OfferCategory { get; set; }
-        public int? UserId { get; set; }
-        public virtual User User { get; set; }
+        public string UserId { get; set; }
     }
 }

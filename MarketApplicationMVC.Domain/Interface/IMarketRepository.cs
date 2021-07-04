@@ -14,5 +14,6 @@ namespace MarketApplicationMVC.Domain.Interface
         void DeleteOffer(int id);
 
         IQueryable<OfferCategory> GetAllOfferCategories();
+        void UpdateOffer(Offer model);
     }
 }

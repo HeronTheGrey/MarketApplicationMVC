@@ -30,6 +30,16 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
             return forumThread.Id;
         }
 
+        public void DeactivateThread(int id)
+        {
+            var thread = _context.ForumThreads.Find(id);
+            if(thread != null)
+            {
+                thread.IsActive = false;
+            }
+            _context.SaveChanges();
+        }
+
         public void DeleteForumPost(int id)
         {
             var post = _context.ForumPosts.Find(id);

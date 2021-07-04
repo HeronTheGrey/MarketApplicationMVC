@@ -4,14 +4,16 @@ using MarketApplicationMVC.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MarketApplicationMVC.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20210701162047_AddedUserIdInOffer")]
+    partial class AddedUserIdInOffer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,17 +110,14 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                     b.Property<string>("PostContent")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ForumThreadId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ForumPosts");
                 });
@@ -136,15 +135,12 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId1")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ForumThreads");
                 });
@@ -480,16 +476,16 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MarketApplicationMVC.Domain.Model.User", null)
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
                         .WithMany("ForumPosts")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MarketApplicationMVC.Domain.Model.ForumThread", b =>
                 {
-                    b.HasOne("MarketApplicationMVC.Domain.Model.User", null)
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
                         .WithMany("ForumThreads")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MarketApplicationMVC.Domain.Model.Offer", b =>
@@ -498,7 +494,7 @@ namespace MarketApplicationMVC.Infrastructure.Migrations
                         .WithMany("Offers")
                         .HasForeignKey("OfferCategoryId");
 
-                    b.HasOne("MarketApplicationMVC.Domain.Model.User", null)
+                    b.HasOne("MarketApplicationMVC.Domain.Model.User", "User")
                         .WithMany("Offers")
                         .HasForeignKey("UserId1");
                 });

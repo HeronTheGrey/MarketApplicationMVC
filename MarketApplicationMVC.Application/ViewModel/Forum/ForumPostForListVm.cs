@@ -12,11 +12,10 @@ namespace MarketApplicationMVC.Application.ViewModel.Forum
         public int Id { get; set; }
         public string PostContent { get; set; }
         public string UserName { get; set; }
-
+        public string UserId { get; set; }
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<ForumPost, ForumPostForListVm>()
-                .ForMember(s => s.UserName, opt => opt.MapFrom(d => d.User.Name));
+            profile.CreateMap<ForumPost, ForumPostForListVm>();
         }
     }
 }

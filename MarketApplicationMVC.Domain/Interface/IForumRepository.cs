@@ -16,6 +16,6 @@ namespace MarketApplicationMVC.Domain.Interface
         ForumPost GetForumPostById(int id);
         IQueryable<ForumPost> GetAllForumPosts();
         void DeleteForumPost(int id);
-
+        void DeactivateThread(int id);
     }
 }

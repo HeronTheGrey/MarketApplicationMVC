@@ -10,6 +10,7 @@ using AutoMapper.QueryableExtensions;
 using MarketApplicationMVC.Domain.Model;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace MarketApplicationMVC.Application.Services
 {
@@ -17,11 +18,13 @@ namespace MarketApplicationMVC.Application.Services
     {
         private readonly IMarketRepository _marketRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public MarketService(IMarketRepository marketRepository, IMapper mapper)
+        public MarketService(IMarketRepository marketRepository, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             _marketRepository = marketRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
         public async Task<int> AddOffer(NewOfferVm newOffer)
         {
@@ -43,11 +46,32 @@ namespace MarketApplicationMVC.Application.Services
             _marketRepository.DeleteOffer(id);
         }
 
+        public OfferForEditVm GetOfferForEdit(int id)
+        {
+            var offer = _marketRepository.GetOfferById(id);
+            var offerVm = _mapper.Map<OfferForEditVm>(offer);
+            return offerVm;
+        }
+
         public List<OfferCategoryVm> GetOfferTypes()
         {
             var types = _marketRepository.GetAllOfferCategories();
             var typesVm = _mapper.ProjectTo<OfferCategoryVm>(types).ToList();
             return typesVm;
+        }
+
+        public async Task UpdateOffer(OfferForEditVm model)
+        {
+            var offer = _mapper.Map<Offer>(model);
+            if (model.Picture != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await model.Picture.CopyToAsync(memoryStream);
+                    offer.Picture = memoryStream.ToArray();
+                }
+            }
+            _marketRepository.UpdateOffer(offer);
         }
 
         public ListOfferForListVm ViewAllActiveOffers()
@@ -80,11 +104,21 @@ namespace MarketApplicationMVC.Application.Services
             return usersList;
         }
 
-        public OfferDetailsVm ViewOfferDetails(int offerId)
+        public async Task<OfferDetailsVm> ViewOfferDetails(int offerId)
         {
             var offer = _marketRepository.GetOfferById(offerId);
             var offerVm = _mapper.Map<OfferDetailsVm>(offer);
+            if (offer.UserId != null)
+            {
+                var user = await _userManager.FindByIdAsync(offer.UserId);
+                offerVm.SellerName = user.UserName;
+            }
+            else
+            {
+                offerVm.SellerName = "";
+            }
             return offerVm;
         }
+
     }
 }

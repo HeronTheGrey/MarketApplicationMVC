@@ -17,10 +17,6 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
         }
         public int AddOffer(Offer offer)
         {
-            if(offer.UserId == 0)
-            {
-                offer.UserId = null;
-            }
             _context.Offers.Add(offer);
             _context.SaveChanges();
             return offer.Id;
@@ -54,6 +50,29 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
             return offer;
         }
 
+        public void UpdateOffer(Offer model)
+        {
+            var offer = _context.Offers.Find(model.Id);
+            if(offer != null)
+            {
+                offer.Description = model.Description;
+                offer.Name = model.Name;
+                offer.Price = model.Price;
+                offer.OfferCategoryId = model.OfferCategoryId;
+                if (model.Picture != null)
+                {
+                    offer.Picture = model.Picture;
+                }
+            }
+            //_context.Offers.Attach(model);
+            _context.Offers.Update(offer);
+/*            _context.Entry(model).Property("Name").IsModified = true;
+            _context.Entry(model).Property("Description").IsModified = true;
+            _context.Entry(model).Property("Price").IsModified = true;
+            _context.Entry(model).Property("OfferCategoryId").IsModified = true;
+            _context.Entry(model).Property("Picture").IsModified = true;*/
+            _context.SaveChanges();
 
+        }
     }
 }

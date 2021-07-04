@@ -1,5 +1,8 @@
 ﻿@model MarketApplicationMVC.Application.ViewModel.Forum.ListForumPostForListVm
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
 @{
     ViewData["Title"] = Model.ThreadName;
 }
@@ -7,9 +10,9 @@
 <h1>@Model.ThreadName</h1>
 
 <p>
-    @Html.ActionLink("Add post", "AddThreadPost", new { threadId=Model.ThreadId })
+    @Html.ActionLink("Add post", "AddThreadPost", new { threadId = Model.ThreadId })
 </p>
-<form asp-action="ViewThreadPosts" method="post">
+<form asp-action="ViewThreadPosts" method="post" name="postsForm">
     <div class="row">
         <table class="table">
             <thead>
@@ -33,33 +36,37 @@
                             @Html.DisplayFor(modelItem => item.PostContent)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            @if (item.UserId == UserManager.GetUserId(User))
+                            {
+                                @Html.ActionLink("Delete", "DeleteThreadPost", new { id = item.Id, threadId = Model.ThreadId, pageSize = Model.PageSize, currentPage = Model.CurrentPage }) @(" | ")
+                            }
+                            <!--@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | -->
+                            <!--@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })-->
+
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
         <input type="hidden" asp-for="CurrentPage" name="currentPage" id="currentPage" />
-        <input type="hidden" asp-for="PageSize" name="pageSize" id="pageSize" value="10"/>
+        <input type="hidden" asp-for="PageSize" name="pageSize" id="pageSize" value="10" />
         <input type="hidden" name="threadId" value="@Model.ThreadId" />
     </div>
     <div class="row">
         <table>
             <tr>
-                @for(int i = 1; i <= Math.Ceiling(Model.Count / (double)Model.PageSize); i++)
+                @for (int i = 1; i <= Math.Ceiling(Model.Count / (double)Model.PageSize); i++)
                 {
-                <td>
-                    @if(i == Model.CurrentPage)
-                    {
-                        @i
-                    }
-                    else
-                    {
-                        <a href="javaScript:PageClick(@i)">@i</a>
-                    }
-                </td>
+                    <td>
+                        @if (i == Model.CurrentPage)
+                        {
+                            @i
+                        }
+                        else
+                        {
+                            <a href="javaScript:PageClick(@i)">@i</a>
+                        }
+                    </td>
                 }
             </tr>
         </table>
@@ -68,12 +75,11 @@
 
 @section Scripts
 {
-<script type="text/javascript">
-    function PageClick(index)
-    {
-        document.getElementById("currentPage").value = index;
-        document.forms[0].submit();
-    }
+    <script type="text/javascript">
+        function PageClick(index) {
+            document.getElementById("currentPage").value = index;
+            document.postsForm.submit();
+        }
 
-</script>
+    </script>
 }

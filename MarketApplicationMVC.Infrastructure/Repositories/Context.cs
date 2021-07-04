@@ -49,17 +49,6 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
 
             //Forum relations
 
-            builder.Entity<ForumThread>() //thread - user
-                .HasOne(p => p.User)
-                .WithMany(b => b.ForumThreads)
-                .IsRequired(false);
-
-
-            builder.Entity<ForumPost>() //post - user
-                .HasOne(p => p.User)
-                .WithMany(b => b.ForumPosts)
-                .IsRequired(false);
-
             builder.Entity<ForumPost>() //post - thread
                 .HasOne(p => p.ForumThread)
                 .WithMany(b => b.ForumPosts);
@@ -69,11 +58,6 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
             builder.Entity<Offer>() //offer price-property
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,4)");
-
-            builder.Entity<Offer>() //offer - user
-                .HasOne(p => p.User)
-                .WithMany(b => b.Offers)
-                .IsRequired(false);
 
             builder.Entity<Offer>() //offer - offer category
                 .HasOne(p => p.OfferCategory)

@@ -13,6 +13,7 @@ namespace MarketApplicationMVC.Application.ViewModel.Market
         public string Name { get; set; }
         public string Description { get; set; }
         public int Price { get; set; } //rozwiązać problem z przecinkiem
+        public string UserId { get; set; }
 
         public void Mapping(Profile profile)
         {

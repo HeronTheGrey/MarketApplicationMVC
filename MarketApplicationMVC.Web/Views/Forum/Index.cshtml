@@ -1,4 +1,7 @@
 ﻿@model MarketApplicationMVC.Application.ViewModel.Forum.ListForumThreadForListVm
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
@@ -11,8 +14,8 @@
 </p>
 <form asp-action="Index" asp-controller="Forum" name="formularz" method="post">
     <div class="row">
-        <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase"/>
-        <input type="submit" value="Wyszukaj"/>
+        <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase" />
+        <input type="submit" value="Wyszukaj" />
     </div>
     <div class="row">
         <table class="table">
@@ -45,9 +48,13 @@
                         </td>
                         <td>
                             <!--@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |-->
-                           <!--@Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
-                            @Html.ActionLink("Posts", "ViewThreadPosts", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                            <!--@Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
+                            @Html.ActionLink("Posts", "ViewThreadPosts", new { id = item.Id })
+                            @if (item.UserId == UserManager.GetUserId(User))
+                            {
+                                @(" | ")
+                                @Html.ActionLink("Delete", "DeleteThread", new { id = item.Id })
+                            }
                         </td>
                     </tr>
                 }
@@ -59,21 +66,21 @@
             <tr>
                 @for (int i = 1; i <= Math.Ceiling(Model.Count / (double)Model.PageSize); i++)
                 {
-                <td>
-                    @if(Model.CurrentPage == i)
-                    {
-                        @i
-                    }
-                    else
-                    {
-                        <a href="javaScript:PageClick(@i)">@i</a>
-                    }
-                </td>
+                    <td>
+                        @if (Model.CurrentPage == i)
+                        {
+                            @i
+                        }
+                        else
+                        {
+                            <a href="javaScript:PageClick(@i)">@i</a>
+                        }
+                    </td>
                 }
             </tr>
         </table>
-        <input type="hidden" asp-for="CurrentPage" name="currentPage" id="currentPage"/>
-        <input type="hidden" asp-for="PageSize" name="pageSize" id="pageSize" value="5"/>
+        <input type="hidden" asp-for="CurrentPage" name="currentPage" id="currentPage" />
+        <input type="hidden" asp-for="PageSize" name="pageSize" id="pageSize" value="5" />
     </div>
 </form>
 
@@ -81,8 +88,7 @@
 @section Scripts
 {
     <script type="text/javascript">
-        function PageClick(index)
-        {
+        function PageClick(index) {
             document.getElementById("currentPage").value = index;
             document.formularz.submit();
         }

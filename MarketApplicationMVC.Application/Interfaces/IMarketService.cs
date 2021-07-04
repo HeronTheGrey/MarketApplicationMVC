@@ -10,9 +10,11 @@ namespace MarketApplicationMVC.Application.Interfaces
     {
         ListOfferForListVm ViewAllActiveOffers();
         Task<int> AddOffer(NewOfferVm newOffer);
-        OfferDetailsVm ViewOfferDetails(int offerId);
+        Task<OfferDetailsVm> ViewOfferDetails(int offerId);
         List<OfferCategoryVm> GetOfferTypes();
         void DeleteOffer(int id);
         ListOfferForListVm ViewAllActiveOffersForList(string searchPhrase, int currentPage, int pageSize);
+        OfferForEditVm GetOfferForEdit(int id);
+        Task UpdateOffer(OfferForEditVm model);
     }
 }
