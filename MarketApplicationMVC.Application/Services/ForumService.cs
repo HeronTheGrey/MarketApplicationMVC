@@ -59,6 +59,13 @@ namespace MarketApplicationMVC.Application.Services
             return amount;
         }
 
+        public IEnumerable<ThreadForApiVm> GetAllThreadsForApi()
+        {
+            var threads = _forumRepository.GetAllForumThreads().Where(p => p.IsActive == true);
+            var threadsVm = _mapper.ProjectTo<ThreadForApiVm>(threads);
+            return threadsVm;
+        }
+
         public async Task<ListForumThreadForListVm> ViewAllActiveThreads(int pageSize, int pageNumber, string searchPhrase)
         {
             var threads = _forumRepository.GetAllForumThreads()

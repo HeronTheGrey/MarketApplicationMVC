@@ -21,19 +21,7 @@ namespace MarketApplicationMVC.Web.Controllers
             _userService = userService;
         }
 
-        public IActionResult ListOfUsers()
-        {
-            List<User> list = new List<User>();
-            list.Add(new Models.User(1, "Heron", "StandardUser"));
-            list.Add(new Models.User(2, "Bartek1999", "Admin"));
-            return View(list);
-        }
 
-        public IActionResult UserDetail()//metoda docelowo będzie pobierać informacje z bazy danych
-        {
-            UserDetails userDetails = new UserDetails("Heron", "Standard user", "Poland", "Warsaw", "Mickiewicza", "00-100", 5, 25);
-            return View(userDetails);
-        }
         public IActionResult Index()
         {
             return View();

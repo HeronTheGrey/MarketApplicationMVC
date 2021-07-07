@@ -46,6 +46,13 @@ namespace MarketApplicationMVC.Application.Services
             _marketRepository.DeleteOffer(id);
         }
 
+        public IEnumerable<OfferForApiVm> GetAllOffersForApi()
+        {
+            var offers = _marketRepository.GetAllOffers().Where(p => p.IsActive == true);
+            var offersVm = _mapper.ProjectTo<OfferForApiVm>(offers);
+            return offersVm;
+        }
+
         public OfferForEditVm GetOfferForEdit(int id)
         {
             var offer = _marketRepository.GetOfferById(id);

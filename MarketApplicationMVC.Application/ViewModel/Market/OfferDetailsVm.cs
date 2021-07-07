@@ -19,8 +19,11 @@ namespace MarketApplicationMVC.Application.ViewModel.Market
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Offer, OfferDetailsVm>()
-                .ForMember(s => s.OfferCategory, opt => opt.MapFrom(d => d.OfferCategory.Name));
+            profile.CreateMap<Offer, OfferDetailsVm>();
+                
         }
     }
+
+
+
 }

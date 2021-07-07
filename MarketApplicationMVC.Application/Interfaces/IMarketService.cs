@@ -16,5 +16,6 @@ namespace MarketApplicationMVC.Application.Interfaces
         ListOfferForListVm ViewAllActiveOffersForList(string searchPhrase, int currentPage, int pageSize);
         OfferForEditVm GetOfferForEdit(int id);
         Task UpdateOffer(OfferForEditVm model);
+        public IEnumerable<OfferForApiVm> GetAllOffersForApi();
     }
 }

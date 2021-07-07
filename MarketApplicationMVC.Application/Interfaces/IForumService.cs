@@ -16,5 +16,6 @@ namespace MarketApplicationMVC.Application.Interfaces
         int GetThreadPostsAmountByThreadId(int id);
         void DeletePost(int id);
         void DeleteThread(int id);
+        public IEnumerable<ThreadForApiVm> GetAllThreadsForApi();
     }
 }
