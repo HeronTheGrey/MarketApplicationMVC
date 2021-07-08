@@ -13,12 +13,10 @@ namespace MarketApplicationMVC.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _userService = userService;
         }
 
 

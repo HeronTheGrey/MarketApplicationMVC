@@ -63,10 +63,7 @@ namespace MarketApplicationMVC.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOffer(NewOfferVm model)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            var userId = currentUser.Id;
-            model.UserId = userId;
-            int id = await _marketService.AddOffer(model);
+
             var types = _marketService.GetOfferTypes();
             List<SelectListItem> listItems = new List<SelectListItem>();
             foreach (var type in types)
@@ -79,6 +76,19 @@ namespace MarketApplicationMVC.Web.Controllers
             }
 
             ViewData["Categories"] = listItems;
+
+            var formFile = model.Picture;
+            if(formFile.Length > 5000000)
+            {
+                ModelState.AddModelError("", "Upload file is too large.");
+                return View(model);
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var userId = currentUser.Id;
+            model.UserId = userId;
+            int id = await _marketService.AddOffer(model);
+            
             return RedirectToAction("Index");
         }
 

@@ -68,7 +68,28 @@ namespace MarketApplicationMVC.Application.ViewModel.Market
     {
         public NewOfferValidator()
         {
-            RuleFor(x => x.OfferCategoryId).NotNull().WithMessage("Należy wybrać kategorię.");
+            RuleFor(x => x.OfferCategoryId).NotNull();
+            RuleFor(x => x.Name).NotNull();
+            RuleFor(x => x.Price).NotNull();
+            RuleFor(x => x.Picture).NotNull();
+            RuleFor(x => x.Picture).SetValidator(new FileValidator());
+
         }
     }
+
+    public class FileValidator : AbstractValidator<IFormFile>
+    {
+        public FileValidator()
+        {
+            RuleFor(x => x.Length).NotNull().LessThanOrEqualTo(1)
+                .WithMessage("File size is larger than allowed");
+            RuleFor(x => x.Length).NotNull().GreaterThan(1)
+                .WithMessage("File size is larger than allowed");
+
+            RuleFor(x => x.ContentType).NotNull().Must(x => x.Equals("image/jpeg") || x.Equals("image/jpg") || x.Equals("image/png"))
+                .WithMessage("File type is larger than allowed");
+
+        }
+    }
+
 }

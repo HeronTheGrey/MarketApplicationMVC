@@ -11,9 +11,9 @@ namespace MarketApplicationMVC.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IMarketRepository, MarketRepository>();
             services.AddTransient<IForumRepository, ForumRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             return services;
         }
     }

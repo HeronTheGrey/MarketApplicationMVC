@@ -9,12 +9,6 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
 {
     public class Context : IdentityDbContext
     {
-        public DbSet<Address> Addresses { get; set; }
-        public DbSet<ContactInformation> ContactInformations { get; set; }
-        public DbSet<ContactType> ContactTypes { get; set; }
-        public DbSet<Domain.Model.Type> Types { get; set; }
-        public DbSet<User> Users { get; set; }
-
 
         public DbSet<ForumPost> ForumPosts { get; set; }
         public DbSet<ForumThread> ForumThreads { get; set; }
@@ -31,21 +25,6 @@ namespace MarketApplicationMVC.Infrastructure.Repositories
         {
             base.OnModelCreating(builder);
 
-
-            //User relations
-
-            builder.Entity<Domain.Model.Type>() //type - user
-                .HasMany(p => p.Users)
-                .WithOne(b => b.Type)
-                .IsRequired(false);
-
-            builder.Entity<User>() //address - user
-                .HasOne(a => a.Address).WithOne(b => b.User)
-                .HasForeignKey<Address>(e => e.UserRef);
-
-            builder.Entity<ContactInformation>() //contact information - user
-                .HasOne(p => p.User)
-                .WithMany(b => b.ContactInformations);
 
             //Forum relations
 

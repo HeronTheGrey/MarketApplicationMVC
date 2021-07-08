@@ -5,22 +5,15 @@
 }
 
 <h1>Index</h1>
-
-<p>
-    <a asp-action="AddUser">Create New</a>
-</p>
-<form asp-action="Index" asp-controller="User" name="formularz" method="post">
+<form asp-controller="User" asp-action="Index" name="formularz" method="post">
     <div class="row">
         <input type="text" asp-for="SearchPhrase" name="searchPhrase" id="searchPhrase" />
-        <input type="submit" value="Wyszukaj"/>
+        <input type="submit" value="Wyszukaj" />
     </div>
     <div class="row">
         <table class="table">
             <thead>
                 <tr>
-                    <th>
-                        Id
-                    </th>
                     <th>
                         Name
                     </th>
@@ -34,55 +27,48 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
-                        <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.UserType)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "EditUser", new { id = item.Id }) |
-                            @Html.ActionLink("Details", "ViewUserDetails", new { id = item.Id }) |
-                            @Html.ActionLink("Delete", "DeleteUser", new { id = item.Id })
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
     <div class="row">
         <table>
             <tr>
-                @for (int i = 1; i <= Math.Ceiling(Model.Count / (double)Model.PageSize); i++)
-                {
-                    <td>
-                        @if (i != Model.CurrentPage)
-                        {
-                            <a href="javascript:PageClick(@i)">@i</a>
-                        }
-                        else
-                        {
-                            <span>@i</span>
-                        }
-                    </td>
-                }
+            @for (int i = 1; i <= Math.Ceiling(Model.Count / (decimal)Model.PageSize); i++)
+            {
+                <td>
+                    @if(i != Model.CurrentPage)
+                    {
+                        <a href="javaScript:PageClick(@i)">@i</a>
+                    }
+                    else
+                    {
+                        <span>@i</span>
+                    }
+                </td>
+            }
             </tr>
         </table>
-        <input type="hidden" name="pageNo" id="pageNo" />
-        <input type="hidden" name="pageSize" id="pageSize" value="5"/>
     </div>
+    <input type="hidden" name="pageNo" id="pageNo" />
+    <input type="hidden" name="pageSize" id="pageSize" value="5" />
 </form>
 
 @section Scripts
 {
     <script type="text/javascript">
-        function PageClick(index)
-        {
+        function PageClick(index) {
 
             document.getElementById("pageNo").value = index;
             document.formularz.submit();
         }
+
     </script>
 }

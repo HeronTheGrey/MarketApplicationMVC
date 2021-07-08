@@ -2,20 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MarketApplicationMVC.Application.Interfaces
 {
     public interface IUserService
     {
-        int AddUser(NewUserVm model);
-        ListUserForListVm GetAllActiveUsersForList(int pageSize, int currentPage, string searchPhrase);
-        int AddContactInformation(ContactInformationVm model);
-        UserDetailsVm ViewUserDetails(int userId);
-        NewUserVm GetUserForEdit(int id);
-        void UpdateUser(NewUserVm model);
-        void DeleteUser(int id);
-        List<UserTypeVm> GetAllUserTypes();
-        AddressEditVm GetUserAddress(int id);
-        void UpdateUserAddress(AddressEditVm model);
+        public Task<ListUserForListVm> GetListOfAllUsers(string searchPhrase, int currentPage, int pageSize);
+        
+
+        
     }
 }

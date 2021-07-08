@@ -18,12 +18,10 @@ namespace MarketApplicationMVC.Application
         {
             services.AddTransient<IForumService, ForumService>();
             services.AddTransient<IMarketService, MarketService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient <IUserService, UserService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             //FluentValidation dependencies
-            services.AddTransient<IValidator<NewUserVm>, NewUserValidator>();
-            services.AddTransient<IValidator<AddressEditVm>, NewAddressValidator>();
             services.AddTransient<IValidator<NewThreadVm>, NewThreadValidator>();
             services.AddTransient<IValidator<NewOfferVm>, NewOfferValidator>();
 
