@@ -25,30 +25,19 @@
                                         <p class="text-secondary">
                                             @Html.DisplayFor(modelItem => item.PostContent)
                                         </p>
-                                        <p class="text-muted"><span class="text-secondary font-weight-bold">@Html.DisplayFor(modelItem => item.UserName)</span></p>
+                                        <p class="text-muted">
+                                            <span class="text-secondary font-weight-bold">@Html.DisplayFor(modelItem => item.UserName)</span>
+                                            @if (item.UserId == UserManager.GetUserId(User))
+                                            {
+                                                @Html.ActionLink("Delete", "DeleteThreadPost", new { id = item.Id, threadId = Model.ThreadId, pageSize = Model.PageSize, currentPage = Model.CurrentPage })
+                                            }
+
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PostContent)
-                </td>
-                <td>
-                    @if (item.UserId == UserManager.GetUserId(User))
-                    {
-                        @Html.ActionLink("Delete", "DeleteThreadPost", new { id = item.Id, threadId = Model.ThreadId, pageSize = Model.PageSize, currentPage = Model.CurrentPage }) @(" | ")
-                    }
-                    <@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
 
-                </td>
-            </tr>
-            -->
                     }
                 </div>
 

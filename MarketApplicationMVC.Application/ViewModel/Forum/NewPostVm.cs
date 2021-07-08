@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MarketApplicationMVC.Application.Mapping;
 using MarketApplicationMVC.Domain.Model;
 using System;
@@ -21,6 +22,14 @@ namespace MarketApplicationMVC.Application.ViewModel.Forum
 
             profile.CreateMap<NewPostVm, ForumPost>()
                 .ForMember(d => d.ForumThreadId, opt => opt.MapFrom(s => s.ThreadId));
+        }
+    }
+    public class NewPostValidator : AbstractValidator<NewPostVm>
+    {
+        public NewPostValidator()
+        {
+            RuleFor(x => x.PostContent).NotNull().MaximumLength(1000);
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MarketApplicationMVC.Application.Mapping;
 using MarketApplicationMVC.Domain.Model;
 using Microsoft.AspNetCore.Http;
@@ -26,4 +27,17 @@ namespace MarketApplicationMVC.Application.ViewModel.Market
                 .ForMember(s => s.Picture, opt => opt.Ignore());
         }
     }
+
+    public class OfferForEditValidator : AbstractValidator<OfferForEditVm>
+    {
+        public OfferForEditValidator()
+        {
+            RuleFor(x => x.OfferCategoryId).NotNull();
+            RuleFor(x => x.Name).NotNull().MaximumLength(50);
+            RuleFor(x => x.Description).NotNull().MaximumLength(1000);
+            RuleFor(x => x.Price).NotNull();
+
+        }
+    }
+
 }

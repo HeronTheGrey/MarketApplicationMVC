@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MarketApplicationMVC.Application.Interfaces;
 using MarketApplicationMVC.Application.Services;
+using MarketApplicationMVC.Application.ViewModel.Forum;
 using MarketApplicationMVC.Application.ViewModel.Market;
 using MarketApplicationMVC.Application.ViewModel.User;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,8 @@ namespace MarketApplicationMVC.Application
             //FluentValidation dependencies
             services.AddTransient<IValidator<NewThreadVm>, NewThreadValidator>();
             services.AddTransient<IValidator<NewOfferVm>, NewOfferValidator>();
-
+            services.AddTransient<IValidator<NewPostVm>, NewPostValidator>(); 
+            services.AddTransient<IValidator<OfferForEditVm>, OfferForEditValidator>();
             return services;
         }
     }

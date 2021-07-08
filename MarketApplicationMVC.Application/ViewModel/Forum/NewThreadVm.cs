@@ -26,7 +26,7 @@ namespace MarketApplicationMVC.Application.ViewModel.Market
             public NewThreadValidator()
             {
                 RuleFor(x => x.Id).NotNull();
-                RuleFor(x => x.Name).MaximumLength(100).WithMessage("Nazwa wątku może mieć maksymalnie 100 znaków.");
+                RuleFor(x => x.Name).MaximumLength(100);
             }
         }
     }
