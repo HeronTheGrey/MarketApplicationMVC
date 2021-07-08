@@ -61,26 +61,26 @@ namespace MarketApplicationMVC.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewThreadPosts(int id, bool lastpage = false, int currentPage = 1, int pageSize = 10)
+        public async Task<IActionResult> ViewThreadPosts(int id, bool lastpage = false, int currentPage = 1, int pageSize = 10)
         {
             if(lastpage)
             {
                 var threadPostAmount = _forumService.GetThreadPostsAmountByThreadId(id);
-                var model = _forumService.ViewThreadPosts(id, pageSize, (int)Math.Ceiling((double)threadPostAmount / 10));
+                var model = await _forumService.ViewThreadPosts(id, pageSize, (int)Math.Ceiling((double)threadPostAmount / 10));
                 return View(model);
             }
             else 
             {
-                var model = _forumService.ViewThreadPosts(id, pageSize, currentPage);
+                var model = await _forumService.ViewThreadPosts(id, pageSize, currentPage);
                 return View(model);
             }
             
         }
 
         [HttpPost]
-        public IActionResult ViewThreadPosts(int threadId, int pageSize, int currentPage)
+        public async Task<IActionResult> ViewThreadPosts(int threadId, int pageSize, int currentPage)
         {
-            var model = _forumService.ViewThreadPosts(threadId, pageSize, currentPage);
+            var model = await _forumService.ViewThreadPosts(threadId, pageSize, currentPage);
             return View(model);
         }
 

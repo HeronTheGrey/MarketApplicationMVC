@@ -92,11 +92,24 @@ namespace MarketApplicationMVC.Application.Services
             return threadsList;
         }
 
-        public ListForumPostForListVm ViewThreadPosts(int threadId, int pageSize, int currentPage)
+        public async Task<ListForumPostForListVm> ViewThreadPosts(int threadId, int pageSize, int currentPage)
         {
             var posts = _forumRepository.GetAllForumPosts().Where(s => s.ForumThreadId == threadId).ProjectTo<ForumPostForListVm>(_mapper.ConfigurationProvider).ToList();
             var threadName = _forumRepository.GetForumThreadById(threadId).Name;
             var postsToShow = posts.Skip(pageSize * (currentPage - 1)).Take(pageSize).ToList();
+
+            foreach(var post in postsToShow)
+            {
+                if(post.UserId != null)
+                {
+                    var user = await _userManager.FindByIdAsync(post.UserId);
+                    if (user != null)
+                    {
+                        post.UserName = user.UserName;
+                    }
+                }
+            }
+
             var postsList = new ListForumPostForListVm
             {
                 ThreadId = threadId,

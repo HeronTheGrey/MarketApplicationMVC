@@ -11,7 +11,7 @@ namespace MarketApplicationMVC.Application.Interfaces
     {
         Task<ListForumThreadForListVm> ViewAllActiveThreads(int pageSize, int pageNumber, string searchPhrase);
         int AddForumThread(NewThreadVm newThread);
-        ListForumPostForListVm ViewThreadPosts(int threadId, int pageSize, int currentPage);
+        Task<ListForumPostForListVm> ViewThreadPosts(int threadId, int pageSize, int currentPage);
         int AddThreadPost(NewPostVm newPost);
         int GetThreadPostsAmountByThreadId(int id);
         void DeletePost(int id);

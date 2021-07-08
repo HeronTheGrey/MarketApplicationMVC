@@ -14,40 +14,44 @@
 </p>
 <form asp-action="ViewThreadPosts" method="post" name="postsForm">
     <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Author
-                    </th>
-                    <th>
-                        Post content
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Posts)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PostContent)
-                        </td>
-                        <td>
-                            @if (item.UserId == UserManager.GetUserId(User))
-                            {
-                                @Html.ActionLink("Delete", "DeleteThreadPost", new { id = item.Id, threadId = Model.ThreadId, pageSize = Model.PageSize, currentPage = Model.CurrentPage }) @(" | ")
-                            }
-                            <!--@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | -->
-                            <!--@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })-->
 
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+                    @foreach (var item in Model.Posts)
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body p-2 p-sm-3">
+                                <div class="media forum-item">
+                                    <div class="media-body">
+                                        <p class="text-secondary">
+                                            @Html.DisplayFor(modelItem => item.PostContent)
+                                        </p>
+                                        <p class="text-muted"><span class="text-secondary font-weight-bold">@Html.DisplayFor(modelItem => item.UserName)</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostContent)
+                </td>
+                <td>
+                    @if (item.UserId == UserManager.GetUserId(User))
+                    {
+                        @Html.ActionLink("Delete", "DeleteThreadPost", new { id = item.Id, threadId = Model.ThreadId, pageSize = Model.PageSize, currentPage = Model.CurrentPage }) @(" | ")
+                    }
+                    <@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+
+                </td>
+            </tr>
+            -->
+                    }
+                </div>
+
         <input type="hidden" asp-for="CurrentPage" name="currentPage" id="currentPage" />
         <input type="hidden" asp-for="PageSize" name="pageSize" id="pageSize" value="10" />
         <input type="hidden" name="threadId" value="@Model.ThreadId" />
