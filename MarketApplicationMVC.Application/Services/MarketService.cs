@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MarketApplicationMVC.Application.Services
 {
-    class MarketService : IMarketService
+    public class MarketService : IMarketService
     {
         private readonly IMarketRepository _marketRepository;
         private readonly IMapper _mapper;
